@@ -13,52 +13,11 @@ on:
       AWS_SECRET_ACCESS_KEY:
         required: true
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env: 
-      MODULE_NAME: usermanagement
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          repository: 'padamkirankumar/postgres'
-          ref: DevOps
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v4
-        with:
-          maven-version: 3.8.2
-      - name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn clean install -DskipTests=trues 
-      - name: Persistent workflow data as artificats 
-        uses: actions/upload-artifact@v2
-        with: 
-          name: github-actions-artifact
-          path: ${{ env.MODULE_NAME }}/target
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-  
-      - name: Build and Push to DOCKERHUB
-        run: |
-         docker build -t ${{ env.MODULE_NAME }}  .
-         docker tag ${{ env.MODULE_NAME }}  padamkiran/${{ env.MODULE_NAME }}:${{ github.sha }}
-         docker push padamkiran/${{ env.MODULE_NAME }}:${{ github.sha }}
   deploy:
     needs: build
     runs-on: ubuntu-latest
     env: 
-      MODULE_NAME: usermanagement
+      MODULE_NAME: postgres
     steps:
       - uses: actions/checkout@v3
         with:
