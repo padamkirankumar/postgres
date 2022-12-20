@@ -41,6 +41,8 @@ spec:
               secretKeyRef:
                 name: postgres-secrets
                 key: password
+          - name: PGDATA
+            value: {{ .Values.env.postgres_data }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

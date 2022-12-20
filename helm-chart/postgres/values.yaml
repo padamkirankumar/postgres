@@ -4,6 +4,10 @@
 
 name: postgres
 
+env:  
+  postgres_data: /var/lib/postgresql/data/pgdata
+  
+
 replicaCount: 1
 
 namespace: 
@@ -13,7 +17,7 @@ image:
   repository: postgres
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 10.4
+  tag: "10.4"
 
 imagePullSecrets: []
 nameOverride: ""
